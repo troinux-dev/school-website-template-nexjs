@@ -34,11 +34,16 @@ Also added: a public **News** page (linked from the footer) so published blog po
 ## Run in GitHub Codespaces
 
 1. On the repo page click **Code → Codespaces → Create codespace on main**.
-2. Wait for setup (installs packages, starts Postgres, runs migrations — a few minutes the first time). The dev server starts by itself and the site opens in a new tab.
-3. You land on **/onboarding**: pick the school name and colours, and enter any admin email.
-4. Sign in at **/portal** with that email, password `codespace`, using **Sign in (development)**.
+2. In the terminal run:
+   ```bash
+   bash .devcontainer/start.sh
+   tail -f /tmp/next-dev.log
+   ```
+   The script finds a database by itself — the codespace's Postgres if there is one, Postgres in Docker if Docker is running, otherwise **PGlite** (an embedded Postgres from npm, data kept in `.pgdata/`). It also creates `.env.local` and runs the database migrations.
+3. When the log says **Ready**, open port 3000 from the **Ports** tab. The first page load takes about 30 seconds.
+4. Complete **/onboarding**, then sign in at **/portal** with your admin email, password `codespace`, using **Sign in (development)**.
 
-If the tab doesn't open, use the **Ports** panel → port 3000 → open in browser. The first page load takes 20–30 seconds while Next.js compiles. To restart the server: `bash .devcontainer/start.sh` (log: `tail -f /tmp/next-dev.log`).
+Run the same script again any time to restart. To start over with an empty site: stop it, delete `.pgdata/`, and run it again.
 
 ## Run with Docker (demo)
 
