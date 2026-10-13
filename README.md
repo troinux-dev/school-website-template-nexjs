@@ -40,6 +40,16 @@ Also added: a public **News** page (linked from the footer) so published blog po
 
 If the tab doesn't open, use the **Ports** panel → port 3000 → open in browser. The first page load takes 20–30 seconds while Next.js compiles. To restart the server: `bash .devcontainer/start.sh` (log: `tail -f /tmp/next-dev.log`).
 
+## Run with Docker (demo)
+
+Builds the production image and a Postgres database, with the development sign-in turned on:
+
+```bash
+docker compose -f docker-compose.demo.yml up --build
+```
+
+In Codespaces, first stop the dev server (`pkill -f "next dev"`) since both use port 3000. Open http://localhost:3000 (in Codespaces, the forwarded port 3000), complete onboarding, then sign in at /portal with your admin email and password `demo`. Stop with Ctrl+C; add `-d` to run in the background and `docker compose -f docker-compose.demo.yml down -v` to wipe the data.
+
 ## Run locally
 
 ```bash

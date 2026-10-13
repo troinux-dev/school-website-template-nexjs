@@ -1,0 +1,41 @@
+# One-command demo: production Docker image + its own Postgres.
+#   docker compose -f docker-compose.demo.yml up --build
+# Then open http://localhost:3000 (in Codespaces: the forwarded port 3000).
+# Uses the development sign-in — for trying the site only, never for production.
+services:
+  web:
+    build:
+      context: .
+      args:
+        CODESPACES: ${CODESPACES:-}
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/school
+      AUTH_SECRET: demo-secret-change-me-in-production-0123456789
+      AUTH_DEV_LOGIN: "true"
+      AUTH_DEV_PASSWORD: demo
+      SCHOOL_TIMEZONE: Africa/Johannesburg
+    volumes:
+      - uploads:/app/uploads
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: school
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d school"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  uploads:
+  pgdata:

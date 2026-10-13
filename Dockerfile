@@ -15,6 +15,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Public build-time value (used to allow Supabase Storage images in next/image).
 ARG NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ARG CODESPACES
+ENV CODESPACES=$CODESPACES
 RUN npm run build
 
 FROM node:22-alpine AS runner
