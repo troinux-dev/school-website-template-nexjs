@@ -3,6 +3,13 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 
+// Load .env.local / .env when run outside Docker (Next.js does this itself; plain Node doesn't).
+for (const f of [".env.local", ".env"]) {
+  try {
+    process.loadEnvFile(f);
+  } catch {}
+}
+
 const url = process.env.DIRECT_URL || process.env.DATABASE_URL;
 if (!url) {
   console.error("DATABASE_URL (or DIRECT_URL) is not set");
