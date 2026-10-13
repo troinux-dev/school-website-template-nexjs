@@ -1,8 +1,13 @@
 import type { NextConfig } from "next";
 
-const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
-  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
-  : undefined;
+function hostOf(url: string | undefined) {
+  try {
+    return url ? new URL(url).hostname : undefined;
+  } catch {
+    return undefined; // placeholder like https://<project-ref>.supabase.co — ignore it
+  }
+}
+const supabaseHost = hostOf(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 const nextConfig: NextConfig = {
   output: "standalone",

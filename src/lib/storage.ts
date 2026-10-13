@@ -46,7 +46,7 @@ export async function saveUpload(
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (url && serviceKey) {
+  if (url && serviceKey && !url.includes("<")) {
     const supabase = createClient(url, serviceKey, { auth: { persistSession: false } });
     const { error } = await supabase.storage.from(BUCKET).upload(key, bytes, { contentType: file.type, upsert: false });
     if (error) throw new UploadError(`Upload failed: ${error.message}`);
