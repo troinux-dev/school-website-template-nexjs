@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Starts the school website for development (Codespaces or any machine).
 # Database, in order of preference:
+#   0. your own DATABASE_URL in .env.local (e.g. Supabase) — used as-is
 #   1. the dev container's "db" Postgres service
 #   2. Postgres in Docker (if Docker is running)
 #   3. PGlite — an embedded Postgres from npm (no Docker needed; data kept in .pgdata/)
@@ -10,7 +11,24 @@ cd "$(dirname "$0")/.."
 [ -d node_modules/@electric-sql/pglite-socket ] || npm ci
 
 POOL=10
-if getent hosts db >/dev/null 2>&1; then
+EXTERNAL_URL=""
+if [ -f .env.local ]; then
+  EXTERNAL_URL=$(grep -E '^DATABASE_URL=' .env.local | tail -1 | cut -d= -f2- | tr -d '"' | tr -d "'")
+  case "$EXTERNAL_URL" in
+    *"<"*|"" ) EXTERNAL_URL="" ;;                                   # empty or placeholder
+    *@db:*|*@127.0.0.1:*|*@localhost:* ) EXTERNAL_URL="" ;;         # local, managed by this script
+  esac
+fi
+
+if [ -n "$EXTERNAL_URL" ]; then
+  echo "Database: your DATABASE_URL from .env.local"
+  case "$EXTERNAL_URL" in
+    *@db.*.supabase.co*)
+      echo "  ⚠ This is Supabase's direct connection (IPv6 only), which Codespaces can't reach."
+      echo "    Use the Session or Transaction pooler string instead: Supabase → Connect → Connection string." ;;
+  esac
+  DB_URL="$EXTERNAL_URL"
+elif getent hosts db >/dev/null 2>&1; then
   echo "Database: dev-container Postgres"
   DB_URL="postgres://postgres:postgres@db:5432/school"
 elif docker info >/dev/null 2>&1; then
@@ -46,10 +64,13 @@ SCHOOL_TIMEZONE=Africa/Johannesburg
 ENV
   echo "Created .env.local"
 fi
-# Point .env.local at the database chosen above.
-sed -i '/^DATABASE_URL=/d;/^DB_POOL_MAX=/d' .env.local
-printf 'DATABASE_URL=%s\nDB_POOL_MAX=%s\n' "$DB_URL" "$POOL" >> .env.local
-export DATABASE_URL="$DB_URL" DB_POOL_MAX="$POOL"
+# Point .env.local at the database chosen above (your own DATABASE_URL is left untouched).
+if [ -z "$EXTERNAL_URL" ]; then
+  sed -i '/^DATABASE_URL=/d;/^DB_POOL_MAX=/d' .env.local
+  printf 'DATABASE_URL=%s\nDB_POOL_MAX=%s\n' "$DB_URL" "$POOL" >> .env.local
+fi
+export DATABASE_URL="$DB_URL"
+[ -z "$EXTERNAL_URL" ] && export DB_POOL_MAX="$POOL"
 
 # Stop a dev server this script started earlier.
 [ -f /tmp/next-dev.pid ] && kill -- -"$(cat /tmp/next-dev.pid)" 2>/dev/null; sleep 1

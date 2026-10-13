@@ -43,6 +43,15 @@ Also added: a public **News** page (linked from the footer) so published blog po
 3. When the log says **Ready**, open port 3000 from the **Ports** tab. The first page load takes about 30 seconds.
 4. Complete **/onboarding**, then sign in at **/portal** with your admin email, password `codespace`, using **Sign in (development)**.
 
+**To use Supabase instead:** in Supabase open your project → **Connect** → **Connection string**. Copy the **Transaction pooler** string (port 6543) and the **Session pooler** string (port 5432) — not the "Direct connection", which Codespaces can't reach. Put them in `.env.local`:
+
+```bash
+DATABASE_URL=postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:6543/postgres
+DIRECT_URL=postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
+```
+
+Then run `bash .devcontainer/start.sh` — it detects your URL, creates the tables in Supabase, and skips the local database.
+
 Run the same script again any time to restart. To start over with an empty site: stop it, delete `.pgdata/`, and run it again.
 
 ## Run with Docker (demo)
