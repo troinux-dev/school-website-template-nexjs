@@ -31,6 +31,15 @@ Also added: a public **News** page (linked from the footer) so published blog po
 - **Badges / leaders / documents** are required on **Publish**, not on Save as draft, so admins can save half-finished work. If Publish fails validation, the work is kept as a draft.
 - **Uploads** go to Supabase Storage when configured, otherwise to `/app/uploads` (a Docker volume).
 
+## Run in GitHub Codespaces
+
+1. On the repo page click **Code → Codespaces → Create codespace on main**.
+2. Wait for setup (installs packages, starts Postgres, runs migrations — a few minutes the first time). The dev server starts by itself and the site opens in a new tab.
+3. You land on **/onboarding**: pick the school name and colours, and enter any admin email.
+4. Sign in at **/portal** with that email, password `codespace`, using **Sign in (development)**.
+
+If the tab doesn't open, use the **Ports** panel → port 3000 → open in browser. To restart the server: `npm run dev`.
+
 ## Run locally
 
 ```bash

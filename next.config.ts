@@ -13,7 +13,11 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    serverActions: { bodySizeLimit: "60mb" },
+    serverActions: {
+      bodySizeLimit: "60mb",
+      // GitHub Codespaces serves the app from *.app.github.dev behind a proxy.
+      ...(process.env.CODESPACES ? { allowedOrigins: ["*.app.github.dev", "localhost:3000"] } : {}),
+    },
   },
 };
 

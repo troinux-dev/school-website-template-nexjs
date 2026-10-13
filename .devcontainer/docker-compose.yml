@@ -1,0 +1,29 @@
+# Codespaces / VS Code dev container: the app plus a throwaway Postgres database.
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/typescript-node:22
+    volumes:
+      - ../..:/workspaces:cached
+    command: sleep infinity
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/school
+      AUTH_SECRET: codespace-dev-secret-change-me-in-production
+      # Development sign-in (no Microsoft Entra needed). Never use in production.
+      AUTH_DEV_LOGIN: "true"
+      AUTH_DEV_PASSWORD: codespace
+      SCHOOL_TIMEZONE: Africa/Johannesburg
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: school
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
