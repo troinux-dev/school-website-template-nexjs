@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/* Brand colours are injected per school at runtime (see lib/colors.ts → themeCss). */
+:root {
+  --brand-primary: #0B1F3A;
+  --brand-primary-fg: #FFFFFF;
+  --brand-primary-ink: #0B1F3A;
+  --brand-primary-soft: #EEF0F3;
+  --brand-accent: #D4A62A;
+  --brand-accent-fg: #111827;
+  --brand-accent-ink: #7A5F12;
+  --brand-accent-soft: #F8EFD6;
+  --brand-accent-on-primary: #D4A62A;
+}
+
+@theme inline {
+  --color-primary: var(--brand-primary);
+  --color-primary-fg: var(--brand-primary-fg);
+  --color-primary-ink: var(--brand-primary-ink);
+  --color-primary-soft: var(--brand-primary-soft);
+  --color-accent: var(--brand-accent);
+  --color-accent-fg: var(--brand-accent-fg);
+  --color-accent-ink: var(--brand-accent-ink);
+  --color-accent-soft: var(--brand-accent-soft);
+  --color-accent-on-primary: var(--brand-accent-on-primary);
+  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Lato", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-white text-base text-slate-800 antialiased;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    @apply text-slate-900;
+  }
+  /* 16px minimum on inputs stops iOS zooming on focus (NF-01.4). */
+  input, select, textarea {
+    font-size: 1rem;
+  }
+  :focus-visible {
+    outline: 3px solid var(--brand-accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-12 sm:py-16;
+  }
+  .eyebrow {
+    @apply text-sm font-bold uppercase tracking-wider text-accent-ink;
+  }
+  .h-section {
+    @apply text-2xl font-semibold tracking-tight sm:text-3xl;
+  }
+  .card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+  }
+  .prose-plain p + p {
+    @apply mt-4;
+  }
+}
