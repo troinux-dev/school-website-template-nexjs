@@ -38,7 +38,7 @@ Also added: a public **News** page (linked from the footer) so published blog po
 3. You land on **/onboarding**: pick the school name and colours, and enter any admin email.
 4. Sign in at **/portal** with that email, password `codespace`, using **Sign in (development)**.
 
-If the tab doesn't open, use the **Ports** panel → port 3000 → open in browser. To restart the server: `npm run dev`.
+If the tab doesn't open, use the **Ports** panel → port 3000 → open in browser. The first page load takes 20–30 seconds while Next.js compiles. To restart the server: `bash .devcontainer/start.sh` (log: `tail -f /tmp/next-dev.log`).
 
 ## Run locally
 

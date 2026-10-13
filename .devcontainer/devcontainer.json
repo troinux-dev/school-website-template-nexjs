@@ -3,15 +3,23 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-  "forwardPorts": [3000],
+  "forwardPorts": [
+    3000
+  ],
   "portsAttributes": {
-    "3000": { "label": "School website", "onAutoForward": "openBrowser" }
+    "3000": {
+      "label": "School website",
+      "onAutoForward": "openBrowserOnce"
+    }
   },
-  "postCreateCommand": "npm ci && npm run db:migrate",
-  "postAttachCommand": "npm run dev",
+  "postCreateCommand": "npm ci",
   "customizations": {
     "vscode": {
-      "extensions": ["bradlc.vscode-tailwindcss", "dbaeumer.vscode-eslint"]
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint"
+      ]
     }
-  }
+  },
+  "postStartCommand": "bash .devcontainer/start.sh"
 }
